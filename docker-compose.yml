@@ -1,65 +1,37 @@
 
-services:
-  # ----------------------------------------
-  # 1. API Application Service
-  # ----------------------------------------
-  app:
-    # Use the local Dockerfile to build the image
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    
-    # Map the container port 3000 to the host port 3000
-    ports:
-      - "3000:3000"
-    
-    # Environment variables (DB connection for the app)
-    environment:
-      # These must match the environment variables used by Sequelize
-      DB_HOST: db                  # Use the service name defined below (db)
-      DB_PORT: 5432
-      DB_USER: keshia-pd
-      DB_PASSWORD: keshia123
-      DB_NAME: pd-test-db
-      JWT_SECRET: YOUR_VERY_SECURE_SECRET_KEY
-      PORT: 3000
-    
-    # Link the application to the database service
-    depends_on:
-      - db
-    
-    # Command to run the service in development mode (using nodemon/ts-node)
-    # This overrides the CMD in the Dockerfile for development
-    command: npm run dev
-    
-    # Mount volumes for live-reloading during development
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules # Important to avoid conflicts between host and container node_modules
 
-  # ----------------------------------------
-  # 2. PostgreSQL Database Service
-  # ----------------------------------------
+services:
   db:
-    image: postgres:14-alpine
+    image: postgres:16
     restart: always
-    
-    # Environment variables for the PostgreSQL container itself
+    container_name: pd-test-db
     environment:
       POSTGRES_USER: keshia-pd
       POSTGRES_PASSWORD: keshia123
       POSTGRES_DB: pd-test-db
-    
-    # Persist the data outside the container
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    
-    # Map the container port to the host for external tools (optional, but useful)
     ports:
       - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
 
-# ----------------------------------------
-# 3. Docker Volumes
-# ----------------------------------------
-volumes:
-  postgres_data:
+  app:
+    build: .
+    container_name: pd-test-app
+    ports:
+      - "3000:3000"
+    environment:
+      # 🔗 Configuración de la base de datos (debe coincidir con la de arriba)
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: keshia-pd
+      DB_PASSWORD: keshia123
+      DB_NAME: pd-test-db
+      
+      # 🔒 Configuración adicional
+      JWT_SECRET: YOUR_VERY_SECURE_SECRET_KEY
+      PORT: 3000
+    depends_on:
+      - db
+    command: npm run dev
+    volumes:
+      - ./app:/usr/src/app

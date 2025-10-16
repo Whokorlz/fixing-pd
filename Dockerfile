@@ -5,13 +5,13 @@ FROM node:18-alpine
 WORKDIR /usr/src/app
 
 # 3. Copy package.json and package-lock.json to install dependencies
-COPY package*.json ./
+COPY app/package*.json ./
 
 # 4. Install dependencies
 RUN npm install
 
 # 5. Copy the rest of the application source code (including the compiled 'dist' folder later)
-COPY . .
+COPY app .
 
 # 6. Build the TypeScript application (required before running the 'start' script)
 # Ensure you have 'npm run build' defined in package.json (tsc)
