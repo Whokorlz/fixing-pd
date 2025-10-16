@@ -1,5 +1,5 @@
 import { DataTypes, Model,Optional,Sequelize} from 'sequelize';
-
+import bcrypt from 'bcrypt'
 
 // 1. Define possible user roles (Requirement 1.a)
 export enum UserRole {
@@ -33,7 +33,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-
+    public checkPassword(password: string): Promise<boolean> {
+        // Uses bcrypt to compare the provided password with the hashed password
+        return bcrypt.compare(password, this.password);
+    }
 
     // 5. NEW: Static method to initialize the model
     public static initialize(sequelize: Sequelize): void {
