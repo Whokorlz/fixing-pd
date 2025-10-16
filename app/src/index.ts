@@ -1,6 +1,8 @@
 import 'dotenv/config'; 
 import express, { Application, Request, Response } from 'express';
 import { connectDB } from './database/connection'; // Import the connection function
+import AuthRoutes from './routes/AuthRoutes';
+import ClientRoutes from './routes/ClientRoutes';
 
 class Server {
     private app: Application;
@@ -35,7 +37,8 @@ class Server {
         });
         
         // TODO: Register main router here:
-        // this.app.use('/api', MainRouter);
+        this.app.use('/api/auth', AuthRoutes);
+        this.app.use('/api/clients', ClientRoutes);
     }
 
     public listen(): void {
