@@ -1,5 +1,6 @@
 import 'dotenv/config'; 
 import express, { Application, Request, Response } from 'express';
+
 import { connectDB } from './database/connection'; // Import the connection function
 
 class Server {

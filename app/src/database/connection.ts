@@ -1,7 +1,13 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+
+
+
 import User from '../models/User';
+import { seedUsers } from '../seeders/01-Users';
 // TODO: Import the remaining models (Client, Order, Product, Warehouse)
 
+dotenv.config();
 
 // Load environment variables from .env if not running in a container
 // (Though in the current setup, docker-compose passes them)
@@ -24,14 +30,26 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     }
 });
 
+const initializeModels = () => {
+    // Call the static method on the model and pass the sequelize instance
+    // This is the CRUCIAL step that solves the "No Sequelize instance passed" error
+    User.initialize(sequelize); 
+    // TODO: Initialize other models here, e.g., Client.initialize(sequelize);
+};
+
 // Function to establish and test the database connection
 export const connectDB = async () => {
     try {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully.');
 
+        initializeModels();
+
         await sequelize.sync({ alter: true }); 
         console.log('Database synchronized: All models loaded and tables created/updated.');
+
+        await seedUsers();
+
     } catch (error) {
         console.error('Unable to connect to the database:', error);
         // Exit process if connection fails, as the app relies on the DB
@@ -39,7 +57,5 @@ export const connectDB = async () => {
     }
 };
 
-
-User.sync();
 
 export default sequelize;
