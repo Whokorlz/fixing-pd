@@ -1,4 +1,7 @@
 import { Sequelize } from 'sequelize';
+import User from '../models/User';
+// TODO: Import the remaining models (Client, Order, Product, Warehouse)
+
 
 // Load environment variables from .env if not running in a container
 // (Though in the current setup, docker-compose passes them)
@@ -26,11 +29,17 @@ export const connectDB = async () => {
     try {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully.');
+
+        await sequelize.sync({ alter: true }); 
+        console.log('Database synchronized: All models loaded and tables created/updated.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
         // Exit process if connection fails, as the app relies on the DB
         process.exit(1);
     }
 };
+
+
+User.sync();
 
 export default sequelize;
