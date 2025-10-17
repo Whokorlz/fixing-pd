@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 
 import User from '../models/User';
 import Client from '../models/Client';
+import Warehouse from '../models/Warehouse';
+import Product from '../models/Product';
+
 
 import { seedUsers } from '../seeders/01-Users';
 // TODO: Import the remaining models (Client, Order, Product, Warehouse)
@@ -35,6 +38,8 @@ const initializeModels = () => {
     // This is the CRUCIAL step that solves the "No Sequelize instance passed" error
     User.initialize(sequelize);
     Client.initialize(sequelize); 
+    Warehouse.initialize(sequelize);
+    Product.initialize(sequelize);
     // TODO: Initialize other models here, e.g., Client.initialize(sequelize);
 };
 
