@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import dotenv from 'dotenv';
 
 import User from '../models/User';
@@ -7,7 +7,9 @@ import Warehouse from '../models/Warehouse';
 import Product from '../models/Product';
 
 
-import { seedUsers } from '../seeders/01-Users';
+import { seedUsers } from '../seeders/01-Users'
+import { seedWarehouses } from '../seeders/02-Warehouse';
+import { seedProducts } from '../seeders/03-Products';
 // TODO: Import the remaining models (Client, Order, Product, Warehouse)
 
 dotenv.config();
@@ -55,13 +57,17 @@ export const connectDB = async () => {
         console.log('Database synchronized: All models loaded and tables created/updated.');
 
         await seedUsers();
+        await seedWarehouses();
+        await seedProducts();
 
     } catch (error) {
         console.error('Unable to connect to the database:', error);
         // Exit process if connection fails, as the app relies on the DB
         process.exit(1);
     }
+
 };
 
 
 export default sequelize;
+export { sequelize, Op };
