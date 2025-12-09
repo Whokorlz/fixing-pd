@@ -20,14 +20,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # 🔗 Configuración de la base de datos (debe coincidir con la de arriba)
+      # 🔗 Setting DB
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: keshia-pd
       DB_PASSWORD: keshia123
       DB_NAME: pd-test-db
       
-      # 🔒 Configuración adicional
+      # 🔒 Aditional
       JWT_SECRET: YOUR_VERY_SECURE_SECRET_KEY
       PORT: 3000
     depends_on:
