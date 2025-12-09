@@ -3,3 +3,4 @@ app/package-lock.json
 .env
 .dockerignore
 postgres-data
+.docker-compose.yml
